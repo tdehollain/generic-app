@@ -1,0 +1,42 @@
+.SideBar {
+	background: #253641;
+	color: #F5F8FA;
+	position: fixed;
+	top: 0;
+	bottom:0;
+	left: 0;
+	width: 200px;
+	/* height: 100%; */
+	overflow-y:scroll;
+	overflow-x:hidden;
+	padding-top: 50px;
+}
+
+.MenuGroup {
+	margin-top: 20px;
+}
+
+.MenuGroupTitle {
+	font-size: 1.2rem;
+	color: #bbcdd7;
+	margin-bottom: 0;
+	padding: 10px 20px;
+	border-top: solid 1px #202B33;
+	border-bottom: solid 1px #202B33;
+}
+
+.MenuGroupTitle svg {
+	margin: 0 10px 2px 0;
+}
+
+.MenuGroupItem {
+	display: block;
+	font-size: 1rem;
+	color: #F5F8FA;
+	padding: 7px 0 7px 40px;
+}
+
+.MenuGroupItem:hover {
+	background: #334b5a;
+	color: #F5F8FA;
+}

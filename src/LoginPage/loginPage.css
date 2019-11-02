@@ -1,0 +1,9 @@
+.loginPage {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.loginPage button {
+  margin-top: 300px;
+}
