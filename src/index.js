@@ -1,11 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
-import history from './helpers/history/history';
+import history from './utils/history';
 import { Provider } from 'react-redux';
 import { Auth0Provider } from './Auth/react-auth0-spa';
 import config from './Auth/auth_config.json';
-import { store } from './helpers/store';
+import { store } from './utils/store';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
