@@ -1,32 +1,40 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
+import React from 'react';
 import NavBarContainer from '../NavBar/NavBarContainer';
 import SideBar from '../Components/SideBar';
 
-class HomeView extends Component {
-  render() {
-    const style = {
-      background: '#F5F8FA',
-      width: '100%'
-    };
+const HomePage = () => {
+  const style = {
+    background: '#F5F8FA',
+    width: '100%'
+  };
 
-    return (
-      <div>
-        <NavBarContainer />
-        <SideBar />
-        <div style={style} className="container">
-          <p>You are signed in!</p>
-          <p>Username: {this.props.username}</p>
-        </div>
+  const sideBarItems = [
+    {
+      name: 'Data',
+      iconName: 'database',
+      items: ['Data Generator', 'Upload', 'Run']
+    },
+    {
+      name: 'Analysis',
+      iconName: 'timeline-line-chart',
+      items: ['Dashboard', 'Standard Analyses', 'Custom Analyses', 'ROI Tree', 'Variance Waterfall']
+    },
+    {
+      name: 'Planning',
+      iconName: 'timeline-events',
+      items: ['Overview', 'Calendar', 'Budget Optimizer']
+    }
+  ];
+
+  return (
+    <div style={style}>
+      <NavBarContainer />
+      <SideBar items={sideBarItems} />
+      <div style={{ width: '300px', margin: '200px auto' }} className="container">
+        <p>You are signed in!</p>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-function mapStateToProps(store) {
-  const { username } = store.userReducer;
-  return { username };
-}
-
-export default connect(mapStateToProps)(HomeView);
+export default HomePage;
