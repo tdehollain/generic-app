@@ -15,7 +15,7 @@ const NavBar = props => {
         <Navbar.Divider></Navbar.Divider>
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
-        <Button icon="log-out" onClick={() => logout({ redirect_uri: 'http://localhost:3001/login' })}>
+        <Button icon="log-out" onClick={() => logout({ redirect_uri: window.location.host + '/login' })}>
           Log out
         </Button>
       </Navbar.Group>
