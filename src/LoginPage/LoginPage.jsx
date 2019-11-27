@@ -11,7 +11,7 @@ const LoginPage = props => {
       <Button
         large
         loading={isAuthenticated === undefined ? true : loading}
-        onClick={() => loginWithRedirect({ redirect_uri: 'http://localhost:3001/' })}
+        onClick={() => loginWithRedirect({ redirect_uri: window.location.href })}
       >
         Login
       </Button>
