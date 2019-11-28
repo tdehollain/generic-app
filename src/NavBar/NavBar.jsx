@@ -10,7 +10,7 @@ const NavBar = props => {
     <Navbar fixedToTop={true} className="Navbar bp3-dark">
       <Navbar.Group align={Alignment.LEFT}>
         <Navbar.Heading className="Heading">
-          <Link to="/">App name</Link>
+          <Link to="/">{props.appName}</Link>
         </Navbar.Heading>
         <Navbar.Divider></Navbar.Divider>
       </Navbar.Group>
