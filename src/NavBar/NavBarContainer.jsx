@@ -1,9 +1,9 @@
 import React from 'react';
 import NavBar from './NavBar';
-import appDefinitions from '../utils/appDefinitions.json';
+import { appName } from '../utils/appDefinitions';
 
 const NavBarContainer = props => {
-  return <NavBar appName={appDefinitions.appName} />;
+  return <NavBar appName={appName} />;
 };
 
 export default NavBarContainer;

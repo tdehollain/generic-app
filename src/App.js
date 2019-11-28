@@ -9,7 +9,7 @@ import '@blueprintjs/core/lib/css/blueprint.css';
 import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import './App.css';
 
-import appDefinitions from './utils/appDefinitions.json';
+import { appName } from './utils/appDefinitions';
 
 import { useAuth0 } from './Auth/react-auth0-spa';
 import LoadingPage from './LoadingPage/LoadingPage';
@@ -17,7 +17,7 @@ import LoadingPage from './LoadingPage/LoadingPage';
 const App = () => {
   // Set the document title
   React.useEffect(() => {
-    document.title = appDefinitions.appName;
+    document.title = appName;
   }, []);
 
   const { isAuthenticated } = useAuth0();

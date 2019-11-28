@@ -1,38 +1,24 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import NavBarContainer from '../NavBar/NavBarContainer';
 import SideBar from '../Components/SideBar';
+import { sideBarItems } from '../utils/appDefinitions';
+// imoprt components as defined in appDefinitions
+import Home from '../AppModules/Home/Home/Home';
 
 const MainContainer = () => {
   const style = {
-    background: '#F5F8FA',
-    width: '100%'
+    margin: '50px 0 0 67px',
+    padding: '5px'
   };
 
-  const sideBarItems = [
-    {
-      name: 'Data',
-      iconName: 'database',
-      items: ['Data Generator', 'Upload', 'Run']
-    },
-    {
-      name: 'Analysis',
-      iconName: 'timeline-line-chart',
-      items: ['Dashboard', 'Standard Analyses', 'Custom Analyses', 'ROI Tree', 'Variance Waterfall']
-    },
-    {
-      name: 'Planning',
-      iconName: 'timeline-events',
-      items: ['Overview', 'Calendar', 'Budget Optimizer']
-    }
-  ];
-
   return (
-    <div style={style}>
+    <div className="mainContainer" style={style}>
       <NavBarContainer />
       <SideBar items={sideBarItems} />
-      <div style={{ width: '300px', margin: '200px auto' }} className="container">
-        <p>You are signed in!</p>
-      </div>
+      <Switch>
+        <Route path={'/Home/Home'} component={Home} />;
+      </Switch>
     </div>
   );
 };
