@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 import LoginPage from './LoginPage/LoginPage';
-import HomePage from './HomePage/HomePage';
+import MainContainer from './MainContainer/MainContainer';
 
 import 'normalize.css/normalize.css';
 import '@blueprintjs/core/lib/css/blueprint.css';
@@ -30,7 +30,7 @@ const App = () => {
           <Route exact path="/login">
             {isAuthenticated ? <Redirect to="/" /> : <LoginPage />}
           </Route>
-          <Route path="/">{isAuthenticated ? <HomePage /> : <Redirect to="/login" />}</Route>
+          <Route path="/">{isAuthenticated ? <MainContainer /> : <Redirect to="/login" />}</Route>
         </Switch>
       )}
     </div>
