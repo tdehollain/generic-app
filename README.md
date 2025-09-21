@@ -31,10 +31,6 @@
   };
   ```
 
-  ```
-
-  ```
-
 - Install clerk: `pnpm install @clerk/clerk-react`
 - Add VITE_CLERK_PUBLISHABLE_KEY to .env.local
 - Configure ConvexProviderWithClerk
