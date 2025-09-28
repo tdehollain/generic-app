@@ -1,35 +1,21 @@
-import {
-  Authenticated,
-  AuthLoading,
-  Unauthenticated,
-  useQuery,
-} from 'convex/react';
-import './App.css';
-import { api } from '../convex/_generated/api';
-import { SignInButton, SignOutButton, UserButton } from '@clerk/clerk-react';
+// import { useQuery } from 'convex/react';
+// import { api } from '../convex/_generated/api';
+import { NavBar } from './components/NavBar';
 
 function App() {
-  const UserName = () => {
-    const user = useQuery(api.username.getCurrentUser);
-    if (!user) {
-      return <div>Not signed in</div>;
-    }
-    return <div>{user ? `Hello ${user.email}` : 'Loading...'}</div>;
-  };
+  // const UserName = () => {
+  //   const user = useQuery(api.username.getCurrentUser);
+  //   if (!user) {
+  //     return <div>Not signed in</div>;
+  //   }
+  //   return <div>{user ? `Hello ${user.email}` : 'Loading...'}</div>;
+  // };
 
   return (
-    <main>
-      <Unauthenticated>
-        <SignInButton />
-      </Unauthenticated>
-      <Authenticated>
-        <UserButton />
-        <UserName />
-        <SignOutButton />
-      </Authenticated>
-      <AuthLoading>
-        <p>Still loading</p>
-      </AuthLoading>
+    <main className="flex flex-col min-h-screen bg-background text-foreground">
+      <NavBar>
+        <p>Hello {}</p>
+      </NavBar>
     </main>
   );
 }

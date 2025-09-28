@@ -85,3 +85,138 @@ export const getCurrentUser = query({
 ```
 
 temp user pwd: 7?9MR?iFGMEstBio
+
+## Shadcn
+
+- Add Tailwind: `pnpm add tailwindcss @tailwindcss/vite`
+- Edit index.css:
+
+```
+@import "tailwindcss";
+```
+
+- Edit tsconfig.json and tsconfig.app.json:
+
+```
+"compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  }
+```
+
+- Edit vite.config.ts:
+
+```
+import path from "path"
+import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
+import { defineConfig } from "vite"
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+})
+```
+
+- Run the CLI:
+
+```
+pnpm dlx shadcn@latest init
+```
+
+## Shadcn Dark Mode
+
+- Add components/theme-provider.tsx:
+
+```
+import { createContext, useContext, useEffect, useState } from "react"
+
+type Theme = "dark" | "light" | "system"
+
+type ThemeProviderProps = {
+  children: React.ReactNode
+  defaultTheme?: Theme
+  storageKey?: string
+}
+
+type ThemeProviderState = {
+  theme: Theme
+  setTheme: (theme: Theme) => void
+}
+
+const initialState: ThemeProviderState = {
+  theme: "system",
+  setTheme: () => null,
+}
+
+const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
+
+export function ThemeProvider({
+  children,
+  defaultTheme = "system",
+  storageKey = "vite-ui-theme",
+  ...props
+}: ThemeProviderProps) {
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  )
+
+  useEffect(() => {
+    const root = window.document.documentElement
+
+    root.classList.remove("light", "dark")
+
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light"
+
+      root.classList.add(systemTheme)
+      return
+    }
+
+    root.classList.add(theme)
+  }, [theme])
+
+  const value = {
+    theme,
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme)
+      setTheme(theme)
+    },
+  }
+
+  return (
+    <ThemeProviderContext.Provider {...props} value={value}>
+      {children}
+    </ThemeProviderContext.Provider>
+  )
+}
+
+export const useTheme = () => {
+  const context = useContext(ThemeProviderContext)
+
+  if (context === undefined)
+    throw new Error("useTheme must be used within a ThemeProvider")
+
+  return context
+}
+```
+
+- Wrap root layout:
+
+```
+  <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    {children}
+  </ThemeProvider>
+```
+
+## Add Nav Bar
