@@ -220,3 +220,40 @@ export const useTheme = () => {
 ```
 
 ## Add Nav Bar
+
+pnpm dlx shaddcn@latest add navbar
+
+## Add ts-router
+
+- Install:
+  `pnpm add @tanstack/react-router @tanstack/react-router-devtools`
+  `pnpm add -D @tanstack/router-plugin`
+
+- Configure vite plugin
+  **If tsc error, try reordering the imports**
+
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [
+    // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+    }),
+    react(),
+    // ...,
+  ],
+});
+```
+
+- Create the files
+  - src/routes/\__root.tsx (with two '_' characters)
+  - src/routes/index.tsx
+  - src/routes/about.tsx
+  - src/main.tsx

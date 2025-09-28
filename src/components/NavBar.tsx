@@ -1,8 +1,9 @@
 import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react';
-// import { Link } from '@tanstack/react-router';
 import { UserButton, SignInButton, SignOutButton } from '@clerk/clerk-react';
 import { Button } from './ui/button';
 import { DarkModeToggle } from './DarkModeToggle';
+import { Link } from '@tanstack/react-router';
+import { LinkIcon } from 'lucide-react';
 
 interface NavBarProps {
   children: React.ReactNode;
@@ -15,25 +16,25 @@ export function NavBar({ children }: NavBarProps) {
         <div className="flex h-14 items-center justify-between px-4 mx-auto">
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2">
-              {/* <LinkIcon className="h-6 w-6" /> */}
-              {/* <Link
+              <LinkIcon className="h-6 w-6" />
+              <Link
                 to="/"
                 className="text-xl font-bold text-foreground hover:text-foreground transition-colors"
               >
                 Barelinks
-              </Link> */}
+              </Link>
             </div>
 
             <nav className="flex items-center ml-4 space-x-2 text-sm font-medium">
               <Button variant="ghost" size="sm" asChild>
-                {/* <Link to="/" className="[&.active]:font-bold">
+                <Link to="/" className="[&.active]:font-bold">
                   Home
-                </Link> */}
+                </Link>
               </Button>
               <Button variant="ghost" size="sm" asChild>
-                {/* <Link to="/about" className="[&.active]:font-bold">
+                <Link to="/about" className="[&.active]:font-bold">
                   About
-                </Link> */}
+                </Link>
               </Button>
             </nav>
           </div>
