@@ -21,7 +21,7 @@ export function NavBar({ children }: NavBarProps) {
                 to="/"
                 className="text-xl font-bold text-foreground hover:text-foreground transition-colors"
               >
-                Barelinks
+                AppName
               </Link>
             </div>
 
