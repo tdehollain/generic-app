@@ -11,7 +11,7 @@ interface NavBarProps {
 
 export function NavBar({ children }: NavBarProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="flex h-14 items-center justify-between px-4 mx-auto">
           <div className="flex items-center space-x-6">
