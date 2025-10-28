@@ -13,7 +13,7 @@ function RouteComponent() {
   //   return <div>{user ? `Hello ${user.email}` : 'Loading...'}</div>;
   // };
   return (
-    <main className="flex flex-col min-h-screen bg-background text-foreground">
+    <main className="flex min-h-screen bg-background text-foreground">
       <p>Hello {}</p>
     </main>
   );
