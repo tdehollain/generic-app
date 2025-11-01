@@ -1,5 +1,5 @@
 import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react';
-import { UserButton, SignInButton, SignOutButton } from '@clerk/clerk-react';
+import { UserButton, SignInButton } from '@clerk/clerk-react';
 import { Button } from './ui/button';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Link } from '@tanstack/react-router';
@@ -47,7 +47,6 @@ export function NavBar({ children }: NavBarProps) {
             </Unauthenticated>
             <Authenticated>
               <UserButton />
-              <SignOutButton />
             </Authenticated>
             <AuthLoading>
               <p>Still loading</p>
