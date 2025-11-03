@@ -11,3 +11,8 @@
 - Create the app in Convex (if it doesn't already exist)
 - Copy the CONVEX_DEPLOYMENT and VITE_CONVEX_URL values to .env.local
 - Create the CLERK_JWT_ISSUER_DOMAIN env var in the project Settings > Environment Variables
+
+## Run
+
+- Run `pnpm run dev`
+- Run `convex dev`
