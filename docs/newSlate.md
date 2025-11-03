@@ -16,3 +16,17 @@
 
 - Run `pnpm run dev`
 - Run `convex dev`
+
+## Deploy to Vercel (dev)
+
+- in Vercel > Environment Variables, create the variables VITE_CLERK_PUBLISHABLE_KEY, VITE_CONVEX_URL (?)
+
+## Creating a production environment
+
+- In Convex, create a Production environment
+- In Clerk, create a Production environment (will require a bunch of DNS CNAME additions)
+- From Clerk, in Setting > API keys, copy the "Frontend API URL" (e.g. https://clerk.barelinks.in) to Convex's setting > Environment Variables, creating a variable CLERK_JWT_ISSUER_DOMAIN
+- In Convex, Project Settings > Production Deploy Keys, click "Generate Production Deploy Keys"
+- Copy the key in Vercel > Environment Variables (for Production environment only): CONVEX_DEPLOY_KEY
+- In Vercel, override the "Build command" to be 'npx convex deploy --cmd 'npm run build'.
+- If Google OAuth is enabled, there are a few more steps to be done in the Google Cloud Platform (explained in the guide linked by Clerk)
