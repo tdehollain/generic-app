@@ -1,5 +1,30 @@
 # How to start a project from this template
 
+## Set up Git
+
+If git repo already exists:
+
+```
+git clone git@github.com:you/main-repo.git
+cd main-repo
+git checkout --orphan [new-slate]
+```
+
+Otherwise, create the new Git repo
+
+## Copy files
+
+Copy in the source repo files BUT EXCLUDE .git (rsync is safest)
+trailing slashes matter: "source-repo/" -> copy contents, not the folder
+`rsync -av --progress ../source-repo/ . --exclude .git`
+
+Commit the new slate
+`git add .`
+`git commit -m "New slate: copy from source-repo (no history)"`
+
+Push the new branch to your GitHub repo
+`git push -u origin [branch name]`
+
 ## Clerk
 
 - Create the app in Clerk (if it doesn't already exist)
