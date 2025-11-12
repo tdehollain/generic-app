@@ -17,6 +17,7 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import { Link } from '@tanstack/react-router';
+import { Separator } from '../ui/separator';
 
 export function NavMain({
   items,
@@ -45,8 +46,19 @@ export function NavMain({
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton
-                  tooltip={item.title}
-                  className="pointer-cursor"
+                  tooltip={{
+                    children: (
+                      <div className="flex flex-col gap-1">
+                        <p className="text-base font-semibold">{item.title}</p>
+                        <Separator className="my-0 bg-background" />
+                        {item.items?.map((subItem) => (
+                          <Link to={subItem.url} className="hover:font-bold">
+                            {subItem.title}
+                          </Link>
+                        ))}
+                      </div>
+                    ),
+                  }}
                 >
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>

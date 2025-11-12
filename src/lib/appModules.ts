@@ -1,4 +1,4 @@
-import { History } from 'lucide-react';
+import { History, Receipt } from 'lucide-react';
 
 const modules = [
   {
@@ -18,6 +18,22 @@ const modules = [
       {
         title: 'Prices',
         url: '/timemachine/prices',
+      },
+    ],
+  },
+  {
+    title: 'Sales Analytics',
+    url: '/sales-analytics',
+    icon: Receipt,
+    isActive: true,
+    items: [
+      {
+        title: 'Sales',
+        url: '/sales-analytics/sales',
+      },
+      {
+        title: 'Sales by SOR',
+        url: '/sales-analytics/sales-by-sor',
       },
     ],
   },
