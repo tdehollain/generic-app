@@ -1,6 +1,7 @@
-import { type FormEvent, useState } from 'react';
-import { useSignIn } from '@clerk/clerk-react';
+import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { useClerk, useSignIn } from '@clerk/clerk-react';
 import { isClerkAPIResponseError } from '@clerk/clerk-react/errors';
+import { useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,11 +18,97 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const clerk = useClerk();
   const { isLoaded, signIn, setActive } = useSignIn();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const syncInFlightRef = useRef(false);
+
+  const activateSessionAndRoute = useCallback(
+    async (sessionId: string) => {
+      if (!setActive) {
+        return;
+      }
+
+      await setActive({ session: sessionId });
+      await navigate({ to: '/', replace: true });
+    },
+    [navigate, setActive]
+  );
+
+  const getSessionIdFromError = (error: unknown) => {
+    if (!isClerkAPIResponseError(error)) {
+      return null;
+    }
+
+    const [firstError] = error.errors;
+    const sessionExistsMeta = firstError?.meta as
+      | {
+          client?: {
+            last_active_session_id?: string | null;
+          };
+        }
+      | undefined;
+
+    return (
+      clerk.client?.lastActiveSessionId ??
+      sessionExistsMeta?.client?.last_active_session_id ??
+      null
+    );
+  };
+
+  useEffect(() => {
+    if (!isLoaded || !signIn) {
+      return;
+    }
+
+    const refreshClerkSession = async () => {
+      if (syncInFlightRef.current) {
+        return;
+      }
+
+      syncInFlightRef.current = true;
+
+      try {
+        const refreshedClient = await clerk.client?.reload();
+        const sessionId =
+          refreshedClient?.lastActiveSessionId ??
+          clerk.client?.lastActiveSessionId ??
+          null;
+
+        if (!refreshedClient?.signedInSessions.length || !sessionId) {
+          return;
+        }
+
+        await activateSessionAndRoute(sessionId);
+      } catch {
+        // Keep the login page usable even if Clerk reload fails while the tab is refocused.
+      } finally {
+        syncInFlightRef.current = false;
+      }
+    };
+
+    const handleFocus = () => {
+      void refreshClerkSession();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        void refreshClerkSession();
+      }
+    };
+
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [activateSessionAndRoute, clerk, isLoaded, signIn]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -45,13 +132,28 @@ export function LoginForm({
       });
 
       if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId });
+        if (!result.createdSessionId) {
+          setErrorMessage('Sign in completed but no session was created.');
+          return;
+        }
+
+        await activateSessionAndRoute(result.createdSessionId);
       } else {
         setErrorMessage('Please complete the remaining sign in steps.');
       }
     } catch (error) {
       if (isClerkAPIResponseError(error)) {
         const [firstError] = error.errors;
+
+        if (firstError?.code === 'session_exists') {
+          const sessionId = getSessionIdFromError(error);
+
+          if (sessionId) {
+            await activateSessionAndRoute(sessionId);
+            return;
+          }
+        }
+
         setErrorMessage(
           firstError?.longMessage ?? firstError?.message ?? 'Sign in failed.'
         );
