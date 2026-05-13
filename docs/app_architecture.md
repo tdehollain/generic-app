@@ -16,3 +16,4 @@ If a login tab becomes active again, refresh Clerk state first; if the user is a
 
 - The login shell is rendered from the root route when the user is unauthenticated.
 - The authenticated app shell is rendered from the same root route once Clerk and Convex report an active session.
+- Charts should use the `uplot` library unless indicated otherwise.
