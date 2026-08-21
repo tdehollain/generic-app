@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import { ClerkProvider, useAuth } from '@clerk/clerk-react';
+import { ClerkProvider, useAuth } from '@clerk/react';
 import { dark } from '@clerk/themes';
 import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { ConvexReactClient } from 'convex/react';

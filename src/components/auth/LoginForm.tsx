@@ -1,6 +1,6 @@
 import { type FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { useClerk, useSignIn } from '@clerk/clerk-react';
-import { isClerkAPIResponseError } from '@clerk/clerk-react/errors';
+import { useClerk, useSignIn } from '@clerk/react';
+import { isClerkAPIResponseError } from '@clerk/react/errors';
 import { useNavigate } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<'div'>) {
   const clerk = useClerk();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { fetchStatus, signIn } = useSignIn();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,14 +29,10 @@ export function LoginForm({
 
   const activateSessionAndRoute = useCallback(
     async (sessionId: string) => {
-      if (!setActive) {
-        return;
-      }
-
-      await setActive({ session: sessionId });
+      await clerk.setActive({ session: sessionId });
       await navigate({ to: '/', replace: true });
     },
-    [navigate, setActive]
+    [clerk, navigate]
   );
 
   const getSessionIdFromError = (error: unknown) => {
@@ -61,7 +57,7 @@ export function LoginForm({
   };
 
   useEffect(() => {
-    if (!isLoaded || !signIn) {
+    if (!clerk.loaded) {
       return;
     }
 
@@ -108,16 +104,12 @@ export function LoginForm({
       window.removeEventListener('focus', handleFocus);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [activateSessionAndRoute, clerk, isLoaded, signIn]);
+  }, [activateSessionAndRoute, clerk]);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isLoaded) {
-      return;
-    }
-
-    if (!signIn) {
+    if (!clerk.loaded) {
       setErrorMessage('Sign in is not ready. Please try again.');
       return;
     }
@@ -126,18 +118,20 @@ export function LoginForm({
     setErrorMessage(null);
 
     try {
-      const result = await signIn.create({
+      const { error } = await signIn.password({
         identifier: email,
         password,
       });
 
-      if (result.status === 'complete') {
-        if (!result.createdSessionId) {
-          setErrorMessage('Sign in completed but no session was created.');
-          return;
-        }
+      if (error) {
+        throw error;
+      }
 
-        await activateSessionAndRoute(result.createdSessionId);
+      if (signIn.status === 'complete') {
+        await signIn.finalize();
+        await navigate({ to: '/', replace: true });
+      } else if (signIn.existingSession) {
+        await activateSessionAndRoute(signIn.existingSession.sessionId);
       } else {
         setErrorMessage('Please complete the remaining sign in steps.');
       }
@@ -166,11 +160,7 @@ export function LoginForm({
   };
 
   const handleGoogleSignIn = async () => {
-    if (!isLoaded) {
-      return;
-    }
-
-    if (!signIn) {
+    if (!clerk.loaded) {
       setErrorMessage('Sign in is not ready. Please try again.');
       return;
     }
@@ -179,11 +169,15 @@ export function LoginForm({
     setErrorMessage(null);
 
     try {
-      await signIn.authenticateWithRedirect({
+      const { error } = await signIn.sso({
         strategy: 'oauth_google',
         redirectUrl: '/',
-        redirectUrlComplete: '/',
+        redirectCallbackUrl: '/',
       });
+
+      if (error) {
+        throw error;
+      }
     } catch (error) {
       if (isClerkAPIResponseError(error)) {
         const [firstError] = error.errors;
@@ -219,7 +213,9 @@ export function LoginForm({
                   placeholder="m@example.com"
                   value={email}
                   autoComplete="email"
-                  disabled={isSubmitting || !isLoaded}
+                  disabled={
+                    isSubmitting || fetchStatus === 'fetching' || !clerk.loaded
+                  }
                   onChange={(event) => setEmail(event.target.value)}
                   required
                 />
@@ -239,19 +235,28 @@ export function LoginForm({
                   type="password"
                   value={password}
                   autoComplete="current-password"
-                  disabled={isSubmitting || !isLoaded}
+                  disabled={
+                    isSubmitting || fetchStatus === 'fetching' || !clerk.loaded
+                  }
                   onChange={(event) => setPassword(event.target.value)}
                   required
                 />
               </Field>
               <Field>
-                <Button type="submit" disabled={isSubmitting || !isLoaded}>
+                <Button
+                  type="submit"
+                  disabled={
+                    isSubmitting || fetchStatus === 'fetching' || !clerk.loaded
+                  }
+                >
                   {isSubmitting ? 'Signing in...' : 'Login'}
                 </Button>
                 <Button
                   variant="outline"
                   type="button"
-                  disabled={isSubmitting || !isLoaded}
+                  disabled={
+                    isSubmitting || fetchStatus === 'fetching' || !clerk.loaded
+                  }
                   onClick={handleGoogleSignIn}
                 >
                   Login with Google
