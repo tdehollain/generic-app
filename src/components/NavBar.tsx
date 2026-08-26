@@ -1,5 +1,4 @@
-import { Authenticated, AuthLoading, Unauthenticated } from 'convex/react';
-import { UserButton, SignInButton } from '@clerk/react';
+import { UserButton } from '@clerk/react';
 import { Button } from './ui/button';
 import { DarkModeToggle } from './DarkModeToggle';
 import { Link } from '@tanstack/react-router';
@@ -41,15 +40,7 @@ export function NavBar() {
         <div className="flex items-center space-x-3">
           <DarkModeToggle />
 
-          <Unauthenticated>
-            <SignInButton />
-          </Unauthenticated>
-          <Authenticated>
-            <UserButton />
-          </Authenticated>
-          <AuthLoading>
-            <p>Still loading</p>
-          </AuthLoading>
+          <UserButton />
         </div>
       </div>
     </header>
